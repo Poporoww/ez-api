@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>A + B = Eiei</title>
+</head>
+
+<body>
+    <h2>Calculator</h2>
+    <p>only add**</p>
+
+    <input type="number" id="a" placeholder="number 1">
+    +
+    <input type="number" id="b" placeholder="number2">
+    <button onclick="addNumbers()">Calculate</button>
+
+    <p id="result">Result : </p>
+
+    <script>
+        async function addNumbers() {
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({a, b})
+                });
+            
+                const data = await response.json();
+            
+                if(data.result !== undefined) {
+                    document.getElementById('result').innerText = `Result : ${data.result}`;
+                } else {
+                    document.getElementById('result').innerText = `Error ${data.error}`;
+                }
+            
+            } catch (err) {
+                document.getElementById('result').innerText = `Cant Connect API`;
+            }
+        }
+    </script>
+</body>
